@@ -199,6 +199,45 @@ const CHARACTERS = [
   { id: 'woman', name: 'Аграфена Тихонова', role: 'Вдова типографщика', description: 'Немолодая, но твёрдая духом. Прячет запрещённые листовки под половицами.', faction: 'Меньшевики', met: false },
 ];
 
+const HISTORICAL_FIGURES = [
+  {
+    name: 'Николай II',
+    title: 'Последний Император',
+    years: '1868–1918',
+    faction: 'Монархия',
+    factionColor: 'border-yellow-700/70 text-yellow-500',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Nicholas_II_of_Russia.jpg/400px-Nicholas_II_of_Russia.jpg',
+    quote: '«Власть — это крест, который несёт избранный Богом»',
+  },
+  {
+    name: 'В. И. Ленин',
+    title: 'Вождь большевиков',
+    years: '1870–1924',
+    faction: 'Большевики',
+    factionColor: 'border-red-700/70 text-red-400',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Vladimir_Lenin.jpg/400px-Vladimir_Lenin.jpg',
+    quote: '«Есть такая партия!»',
+  },
+  {
+    name: 'Л. Д. Троцкий',
+    title: 'Председатель Совета',
+    years: '1879–1940',
+    faction: 'Большевики',
+    factionColor: 'border-red-700/70 text-red-400',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/LevTrotsky.jpg/400px-LevTrotsky.jpg',
+    quote: '«Революция требует умения действовать»',
+  },
+  {
+    name: 'А. Ф. Керенский',
+    title: 'Глава Временного правительства',
+    years: '1881–1970',
+    faction: 'Эсеры',
+    factionColor: 'border-amber-700/70 text-amber-400',
+    photo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Kerensky_1917.jpg/400px-Kerensky_1917.jpg',
+    quote: '«Россия должна быть свободной республикой»',
+  },
+];
+
 const ACHIEVEMENTS_LIST = [
   { id: 'first_choice', name: 'Первый шаг', description: 'Сделать первый выбор в игре', icon: '⭐', unlocked: true },
   { id: 'saint', name: 'Праведник', description: 'Набрать 80+ очков совести', icon: '✝️', unlocked: false },
@@ -402,6 +441,50 @@ export default function App() {
         <div className="relative min-h-screen flex flex-col" key={animKey}>
           <GameHeader screen={screen} setScreen={setScreen} title={`Глава ${gameState.chapter} · ${scene?.location}`} moralDisplay={moralDisplay} gameState={gameState} />
 
+          <div className="flex-1 flex gap-0 relative">
+            {/* Боковая панель — исторические правители */}
+            <aside className="hidden lg:flex flex-col w-52 shrink-0 border-r border-border/30 py-5 px-3 gap-4 sticky top-0 h-screen overflow-y-auto bg-background/40 backdrop-blur-sm">
+              <div className="font-propaganda text-xs tracking-[0.2em] text-foreground/30 uppercase mb-1 text-center">Эпоха · 1917</div>
+              {HISTORICAL_FIGURES.map((fig, i) => (
+                <div
+                  key={fig.name}
+                  className="group relative animate-fade-in"
+                  style={{ animationDelay: `${i * 0.12}s`, opacity: 0 }}
+                >
+                  <div className="border border-border/40 hover:border-amber-700/40 transition-all duration-300 overflow-hidden bg-card/40">
+                    {/* Фото */}
+                    <div className="relative overflow-hidden h-36">
+                      <img
+                        src={fig.photo}
+                        alt={fig.name}
+                        className="w-full h-full object-cover object-top grayscale sepia opacity-75 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500"
+                        style={{ filter: 'grayscale(0.6) sepia(0.5) contrast(1.1)' }}
+                      />
+                      {/* Виньетка снизу */}
+                      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-card/90 to-transparent" />
+                    </div>
+                    {/* Подпись */}
+                    <div className="px-2.5 py-2">
+                      <div className="font-propaganda text-xs text-amber-400/90 tracking-wide leading-tight">{fig.name}</div>
+                      <div className="font-serif text-xs italic text-foreground/50 leading-tight mt-0.5">{fig.title}</div>
+                      <div className="flex items-center justify-between mt-1.5">
+                        <span className={`text-xs font-propaganda border px-1 py-0.5 tracking-wider text-[10px] ${fig.factionColor}`}>
+                          {fig.faction}
+                        </span>
+                        <span className="text-foreground/25 text-[10px] font-serif">{fig.years}</span>
+                      </div>
+                    </div>
+                    {/* Цитата при наведении */}
+                    <div className="overflow-hidden max-h-0 group-hover:max-h-16 transition-all duration-300 px-2.5 pb-2">
+                      <p className="text-[10px] font-serif italic text-foreground/40 leading-tight border-t border-border/30 pt-1.5">
+                        {fig.quote}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </aside>
+
           <div className="flex-1 flex flex-col max-w-2xl mx-auto w-full px-4 py-6 gap-5">
             {scene?.speaker && (
               <div className="flex items-center gap-3 animate-slide-in">
@@ -462,6 +545,7 @@ export default function App() {
                 </div>
               </div>
             )}
+          </div>
           </div>
         </div>
       )}
